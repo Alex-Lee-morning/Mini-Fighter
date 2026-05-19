@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>小人格斗</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="top">
+        <h1>小人格斗</h1>
+        <p class="hint">
+          <kbd>A</kbd> <kbd>D</kbd> 移动 ·           <kbd>W</kbd> 上段架势（配合攻击） · <kbd>S</kbd> 格挡 · <kbd>S</kbd>+<kbd>A</kbd>/<kbd>D</kbd> 蹲移 ·
+          <kbd>J</kbd> 普攻（弓手：远程箭伤害较高、射速较慢带拉弓；贴近变近战且伤害较低） · 地面仅蹲 <kbd>S</kbd>+<kbd>J</kbd> 贯落（穿台直落底层、沿途可命中） · <kbd>L</kbd> 长距离闪 · <kbd>W</kbd>+<kbd>J</kbd> 升龙（高度较低）/ 空中俯冲 · 空中 <kbd>S</kbd>+<kbd>A</kbd>/<kbd>D</kbd>+<kbd>J</kbd> 武者俯冲落底层（红冲）；弓手朝面向斜下约 45° 齐射并腾空 · 空中 <kbd>S</kbd>+<kbd>J</kbd> 武者坠踢；弓手向下散射并腾空 ·
+          <kbd>U</kbd> 武者聚气推弹 · <kbd>W</kbd>+<kbd>A</kbd>/<kbd>D</kbd>+<kbd>U</kbd> 斜上短光柱（弓手为扇形箭）· 按住 <kbd>S</kbd>+蓄力 <kbd>U</kbd> 松发：武者裂地斩 / 弓手三支平射箭 ·
+          弓手单按 <kbd>U</kbd>：抡弓大范围横扫（伤害低、击退强、后摇长）·
+          上层台面 <kbd>S</kbd>+<kbd>K</kbd> 下落 · <kbd>S</kbd>+<kbd>K</kbd>（地面）蹲跳踢 · <kbd>K</kbd> 跳跃（空中可再按一次二段跳） ·
+          <kbd>Esc</kbd> 暂停 / 继续 · <kbd>P</kbd> 暂停
+        </p>
+      </header>
+
+      <div id="menu" class="panel menu-panel" aria-label="游戏设置">
+        <div class="menu-grid">
+          <label class="field">
+            <span>模式</span>
+            <select id="optMode">
+              <option value="dummy">木桩练习</option>
+              <option value="vs_ai">人机对打</option>
+              <option value="challenge">闯关（3 关）</option>
+            </select>
+          </label>
+          <label class="field" id="wrapDifficulty">
+            <span>人机难度</span>
+            <select id="optDifficulty">
+              <option value="easy">简单</option>
+              <option value="normal" selected>普通</option>
+              <option value="hard">困难</option>
+            </select>
+          </label>
+          <label class="field" id="wrapHp">
+            <span>血量（双方）</span>
+            <select id="optHp">
+              <option value="80">80</option>
+              <option value="120" selected>120</option>
+              <option value="180">180</option>
+              <option value="240">240</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>角色</span>
+            <select id="optChar">
+              <option value="warrior" selected>武者（近战 / U 发波）</option>
+              <option value="archer">弓手（绿衣女弓手 / 抡弓 U）</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>场景</span>
+            <select id="optMap">
+              <option value="0">木榻道场</option>
+              <option value="1">竹海忍径</option>
+              <option value="2">樱庭满开</option>
+              <option value="3">霓虹天台</option>
+            </select>
+          </label>
+        </div>
+        <div class="menu-actions">
+          <button type="button" id="btnStart" class="btn primary">开始</button>
+        </div>
+        <p class="menu-note">闯关模式每关敌人更强；木桩模式不扣血，专注连段与伤害统计。</p>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="game" width="900" height="480"></canvas>
+        <div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-label="暂停">
+          <div class="pause-card">
+            <h2 id="pauseTitle" class="pause-title">游戏已暂停</h2>
+            <p id="pauseSub" class="pause-sub">按 <kbd>Esc</kbd> 或「继续游戏」恢复</p>
+            <div class="pause-btns">
+              <button type="button" id="btnPauseContinue" class="btn primary">继续游戏</button>
+              <button type="button" id="btnPauseQuit" class="btn btn-danger">退出本局</button>
+            </div>
+          </div>
+        </div>
+        <div id="hud" class="hud hidden">
+          <div class="bars">
+            <div class="bar-block">
+              <span class="tag you">你</span>
+              <div class="bar"><div id="hpYou" class="fill you"></div></div>
+            </div>
+            <div class="bar-block">
+              <span class="tag foe" id="foeLabel">对手</span>
+              <div class="bar"><div id="hpFoe" class="fill foe"></div></div>
+            </div>
+          </div>
+          <div class="hud-row">
+            <span>总伤害 <strong id="totalDmg">0</strong></span>
+            <span>最高连击 <strong id="maxCombo">0</strong></span>
+            <span id="waveLine" class="hidden">关卡 <strong id="waveNum">1</strong>/3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="game-data.js"></script>
+    <script src="game-render.js"></script>
+    <script src="game-main.js" defer></script>
+  </body>
+</html>
